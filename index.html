@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IK Arm Follow Mouse</title>
+    <style>
+        body {
+        	margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+var cRect = canvas.getBoundingClientRect();
+let mouseX = 0;
+let mouseY = 0;
+let keys = [];
+let timing = 0;
+canvas.addEventListener("mousemove", function(e) {
+  mouseX = Math.round(e.clientX - cRect.left);
+  mouseY = Math.round(e.clientY - cRect.top);
+});
+function keysPressed(e) {
+    keys[e.keyCode] = true;
+    e.preventDefault();
+}
+function keysReleased(e) {
+    keys[e.keyCode] = false;
+}
+function increase(n) {
+	if(n < 0) {
+    	return Math.floor(n);
+    }
+    return Math.ceil(n);
+}
+window.addEventListener("keydown", keysPressed, false);
+window.addEventListener("keyup", keysReleased, false);
+
+function getPos(x, y, r) {
+  return {
+    x: x * Math.cos(r) + y * Math.cos(r + Math.PI/2),
+    y: x * Math.sin(r) + y * Math.sin(r + Math.PI/2),
+  };
+}
+
+function Limb(x, y, length1, length2, reverse) {
+  this.x = x;
+  this.y = y;
+  this.length1 = length1;
+  this.length2 = length2;
+  this.reverse = reverse;
+  this.angle1 = 0;
+	this.angle2 = 0;
+	this.target = null;
+}
+Limb.prototype.update = function(targetX, targetY) {
+	let dx = targetX - this.x;
+	let dy = targetY - this.y;
+  let dist = Math.sqrt(dx * dx + dy * dy);
+
+  dist = Math.min(dist, this.length1 + this.length2);
+  let angleB;
+  if(this.reverse) {
+    angleB = Math.atan2(dy, dx) + Math.acos((this.length1**2 + dist**2 -     	 this.length2**2) / (2 * this.length1 * dist));
+  } else {
+    angleB = Math.atan2(dy, dx) - Math.acos((this.length1**2 + dist**2 -     	 this.length2**2) / (2 * this.length1 * dist));
+  }
+  let angleA = Math.atan2(targetY - (this.y + Math.sin(this.angle1) * this.length1), targetX - (this.x + Math.cos(this.angle1) * this.length1));
+
+	this.angle1 = angleB;
+	this.angle2 = angleA;
+}
+Limb.prototype.draw = function() {
+  let x1 = this.x + Math.cos(this.angle1) * this.length1;
+  let y1 = this.y + Math.sin(this.angle1) * this.length1;
+  let x2 = x1 + Math.cos(this.angle2) * this.length2;
+  let y2 = y1 + Math.sin(this.angle2) * this.length2;
+  ctx.beginPath();
+  ctx.moveTo(this.x, this.y);
+  ctx.lineTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+};
+
+function Rig(sF) {
+  this.x = canvas.width/2;
+  this.y = canvas.height/2;
+  this.scaleFactor = sF;
+  
+  this.arm1 = new Limb(this.x, this.y - 30, 30 * this.scaleFactor, 40 * this.scaleFactor, true, 1);
+  this.arm2 = new Limb(this.x, this.y - 30, 30 * this.scaleFactor, 40 * this.scaleFactor, true, 1);
+  
+  this.leg1 = new Limb(this.x, this.y - 40 + 80  * this.scaleFactor, 40 * this.scaleFactor, 45 * this.scaleFactor, false, 1);
+  this.leg2 = new Limb(this.x, this.y - 40 + 80  * this.scaleFactor, 40 * this.scaleFactor, 45 * this.scaleFactor, false, 1);
+  
+  this.walkCycle = 180;
+  this.face = 0.1;
+  this.step = 0;
+}
+Rig.prototype.moveTo = function(x, y) {
+  let xDif = this.x;
+  let yDif = this.y;
+  this.x-=xDif;
+  this.y-=yDif;
+  this.arm1.x+=xDif;
+  this.arm1.y+=yDif;
+  this.arm2.x+=xDif;
+  this.arm2.y+=yDif;
+  this.leg1.x+=xDif;
+  this.leg1.y+=yDif;
+  this.leg2.x+=xDif;
+  this.leg2.y+=yDif;
+  
+  this.x+=x;
+  this.y+=y;
+  this.arm1.x+=x;
+  this.arm1.y+=y;
+  this.arm2.x+=x;
+  this.arm2.y+=y;
+  this.leg1.x+=x;
+  this.leg1.y+=y;
+  this.leg2.x+=x;
+  this.leg2.y+=y;
+}
+Rig.prototype.move = function(x, y) {
+  this.x+=x;
+  this.y+=y;
+  this.arm1.x+=x;
+  this.arm1.y+=y;
+  this.arm2.x+=x;
+  this.arm2.y+=y;
+  this.leg1.x+=x;
+  this.leg1.y+=y;
+  this.leg2.x+=x;
+  this.leg2.y+=y;
+}
+Rig.prototype.palladium = function() {
+  ctx.strokeStyle = "rgb(100, 100, 100)"
+  this.arm1.draw();
+  this.arm2.draw();
+  this.leg1.draw();
+  this.leg2.draw();
+  this.walkCycle+=1;
+  this.arm1.reverse = true;
+  this.arm1.update(this.x + 20 * this.scaleFactor, this.y - 40 + 35 * this.scaleFactor);
+  this.arm2.update(this.x + 75 * this.scaleFactor,
+      this.y - 40 - 10 * this.scaleFactor);
+      
+  ctx.strokeStyle = "brown"
+  ctx.beginPath();
+  ctx.arc(this.x + 35 * this.scaleFactor, this.y - 40 + 10 * this.scaleFactor, 50 * this.scaleFactor, -Math.PI/3 - 0.5, Math.PI/3 - 0.5);
+  ctx.stroke();
+  ctx.strokeStyle = "rgb(30, 30, 30)";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(this.x + 40 * this.scaleFactor, this.y - 40 - 40 * this.scaleFactor);
+  ctx.lineTo(this.x + 15 * this.scaleFactor, this.y - 40 + 30 * this.scaleFactor);
+  ctx.lineTo(this.x + 75 * this.scaleFactor, this.y - 40 + 30 * this.scaleFactor);
+  ctx.stroke();
+  ctx.beginPath();
+
+
+  this.leg1.update(this.x + 10 * this.scaleFactor, 
+      this.y - 40 + 160 * this.scaleFactor);
+  this.leg2.update(this.x - 15 * this.scaleFactor, 
+      this.y - 40 + 160 * this.scaleFactor);
+  ctx.strokeStyle = "rgb(100, 100, 100)"
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(this.x + 5 * increase(this.face), this.y - 40);
+  ctx.lineTo(this.x, this.y - 40 + 80 * this.scaleFactor);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(this.x + 7 * increase(this.face), this.y - 40 - 20 * this.scaleFactor, 20 * this.scaleFactor, 0, 2 * Math.PI);
+  ctx.stroke();
+  this.arm1.x = this.x + 5 * increase(this.face);
+  this.arm2.x = this.x + 5 * increase(this.face);
+}
+Rig.prototype.update = function() {
+    ctx.strokeStyle = "rgb(0, 0, 0)"
+    this.arm1.draw();
+    this.arm2.draw();
+    this.leg1.draw();
+    this.leg2.draw();
+    if(Math.abs(this.face) > 0.1) {
+      this.arm1.update(this.x + 10 * this.face * this.scaleFactor + 
+              Math.cos(this.walkCycle) * 40 * this.scaleFactor, 
+          this.y - 40 + 70 * this.scaleFactor - Math.abs(Math.sin((this.walkCycle - 180))) * 10 * this.scaleFactor);
+      this.arm2.update(this.x + 10 * this.face * this.scaleFactor + 
+              Math.cos((this.walkCycle - 180)) * 40 * this.scaleFactor, 
+          this.y - 40 + 70 * this.scaleFactor - Math.abs(Math.sin((this.walkCycle - 180))) * 10 * this.scaleFactor)
+
+
+      this.leg1.update(this.x + Math.cos(this.walkCycle - 180) * 30 * this.scaleFactor, 
+          this.y - 40 + 165 * this.scaleFactor + -Math.abs(Math.sin(this.walkCycle - 180)) * 10 * this.scaleFactor);
+      this.leg2.update(this.x + Math.cos(this.walkCycle) * 30 * this.scaleFactor, 
+          this.y - 40 + 165 * this.scaleFactor + -Math.abs(Math.sin(this.walkCycle)) * 10 * this.scaleFactor);
+    } else {
+      this.arm1.update(this.x + 20 * increase(this.face) * this.scaleFactor, this.y - 40 + 70 * this.scaleFactor);
+      this.arm2.update(this.x + 10 * increase(this.face) * this.scaleFactor, this.y - 40 + 70 * this.scaleFactor);
+
+      this.leg1.update(this.x + 15 * increase(this.face) * this.scaleFactor, this.y - 40 + 160 * this.scaleFactor);
+      this.leg2.update(this.x - 15 * increase(this.face) * this.scaleFactor, this.y - 40 + 160 * this.scaleFactor);
+    }
+    if(this.hold) {
+      this.hold.moveTo(this.x + 20 * increase(this.face) * this.scaleFactor, this.y - 40 + 70 * this.scaleFactor)
+    }
+  	ctx.strokeStyle = "black";
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(this.x + 5 * increase(this.face), this.y - 40);
+    ctx.lineTo(this.x, this.y - 40 + 80 * this.scaleFactor);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(this.x + 7 * increase(this.face), this.y - 40 - 20 * this.scaleFactor, 20 * this.scaleFactor, 0, 2 * Math.PI);
+    ctx.stroke();
+    this.arm1.x = this.x + 5 * increase(this.face);
+    this.arm2.x = this.x + 5 * increase(this.face);
+}
+Rig.prototype.AI = function() {
+  if(!this.steps || this.step >= this.steps.length) {
+    return;
+  }
+  let moved = false;
+  if(this.x < this.steps[this.step].x - 2) {
+    moved = true;
+    this.move(2, 0)
+    this.walkCycle+=0.1;
+    this.face = 1;
+    this.arm1.reverse = true;
+    this.arm2.reverse = true;
+    this.leg1.reverse = false;
+    this.leg2.reverse = false;
+  } else if(this.x > this.steps[this.step].x + 2) {
+    moved = true;
+    this.move(-2, 0)
+    this.walkCycle-=0.1;
+    this.face = -1;
+    this.arm1.reverse = false;
+    this.arm2.reverse = false;
+    this.leg1.reverse = true;
+    this.leg2.reverse = true;
+  }
+  
+  
+  if(this.y < this.steps[this.step].y - 2) {
+    if(moved) {
+      this.walkCycle+=0.1;
+    }
+    moved = true;
+    this.move(0, 2)
+  } else if(this.y > this.steps[this.step].y + 2) {
+    if(moved) {
+      this.walkCycle-=0.1;
+    }
+    moved = true;
+    this.move(0, -2)
+  }
+  
+  if(this.steps[this.step].action) {
+    let action = this.steps[this.step].action;
+    if(action.type === "grab" && !moved) {
+      if(this.hold !== action.thing) {
+        moved = true;
+        this.hold = action.thing;
+      }
+    }
+  }
+  
+  
+  if(!moved) {
+    if(this.face > 0) {
+      this.face = 0.1;
+    } else {
+      this.face = -0.1
+    }
+    this.walkCycle = 0;
+    this.step+=1;
+  }
+  
+}
+Rig.prototype.keyControl = function() {
+  if(keys[65]) {
+    this.move(-2, 0)
+    this.walkCycle-=0.1;
+    this.face = -1;
+    this.arm1.reverse = false;
+    this.arm2.reverse = false;
+    this.leg1.reverse = true;
+    this.leg2.reverse = true;
+  } else if(keys[68]) {
+    this.move(2, 0)
+    this.walkCycle+=0.1;
+    this.face = 1;
+    this.arm1.reverse = true;
+    this.arm2.reverse = true;
+    this.leg1.reverse = false;
+    this.leg2.reverse = false;
+  } else {
+    if(this.face > 0) {
+      this.face = 0.1;
+    } else {
+      this.face = -0.1
+    }
+    this.walkCycle = 0;
+  }
+}
+
+let rigs = [];
+let rig = new Rig(0.5);
+rig.move(-50, 100);
+rigs.push(rig);
+
+function forest() {
+	
+}
+function house(x, y, s) {
+  ctx.filStyle = "rgb(148, 88, 4)";
+  ctx.fillRect(x, y, 200 * s, 150 * s)
+}
+function tree(x, y, s) {
+  ctx.fillStyle = "rgb(158, 87, 5)"
+  ctx.fillRect(x - 10 * s, y, 20 * s, 30 * s);
+  ctx.fillStyle = "rgb(5, 173, 25)"
+  ctx.beginPath();
+  ctx.moveTo(x, y - 100 * s);
+  ctx.lineTo(x - 50 * s, y);
+  ctx.lineTo(x + 50 * s, y);
+  ctx.fill();
+}
+function docks() {
+  // ground + sky
+  ctx.fillStyle = "rgb(93, 226, 231)"
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgb(34, 204, 4)"
+  ctx.fillRect(0, canvas.height - 300, canvas.width, 300);
+}
+function troy() {
+  // ground + sky
+  ctx.fillStyle = "rgb(93, 226, 231)"
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgb(34, 204, 4)"
+  ctx.fillRect(0, canvas.height - 300, canvas.width, 300);
+  
+  // castle walls
+  ctx.fillStyle = "rgb(200, 200, 200)"
+  ctx.fillRect(0, canvas.height - 500, canvas.width, 200);
+  ctx.fillStyle = "rgb(180, 180, 180)"
+  for(let x = 0; x < canvas.width; x+=50) {
+    ctx.fillRect(x, canvas.height - 515, 25, 15);
+  }
+  
+  // trees
+  tree(100, canvas.height - 280, 1);
+  tree(canvas.width - 90, canvas.height - 325, 0.8);
+}
+function temple() {
+  ctx.fillStyle = "rgb(200, 200, 200)"
+  ctx.fillRect(0, 0, canvas.width, canvas.height - 300);
+  ctx.fillStyle = "rgb(180, 180, 180)";
+  ctx.fillRect(0, canvas.height - 300, canvas.width, 300);
+  // platform 5
+  ctx.fillStyle = "rgb(170, 170, 170)"
+  ctx.beginPath();
+  ctx.moveTo(canvas.width/2 - 100, canvas.height - 200);
+  ctx.lineTo(canvas.width/2 - 170, canvas.height - 100);
+  ctx.lineTo(canvas.width/2 + 50, canvas.height - 100);
+  ctx.lineTo(canvas.width/2 + 100, canvas.height - 200);
+  ctx.fill();
+  ctx.fillStyle = "rgb(150, 150, 150)"
+  ctx.beginPath();
+  ctx.moveTo(canvas.width/2 + 50, canvas.height - 100);
+  ctx.lineTo(canvas.width/2 - 170, canvas.height - 100);
+  ctx.lineTo(canvas.width/2 - 170, canvas.height - 50);
+  ctx.lineTo(canvas.width/2 + 50, canvas.height - 50);
+  ctx.fill();
+  ctx.fillStyle = "rgb(160, 160, 160)"
+  ctx.beginPath();
+  ctx.moveTo(canvas.width/2 + 100, canvas.height - 200);
+  ctx.lineTo(canvas.width/2 + 50, canvas.height - 100);
+  ctx.lineTo(canvas.width/2 + 50, canvas.height - 50);
+  ctx.lineTo(canvas.width/2 + 100, canvas.height - 150);
+  ctx.fill();
+}
+function camp() {
+  ctx.fillStyle = "rgb(1, 47, 74)"
+  ctx.fillRect(0, 0, canvas.width, canvas.height - 300);
+  ctx.fillStyle = "rgb(11, 82, 0)";
+  ctx.fillRect(0, canvas.height - 500, canvas.width, 500);
+  ctx.fillStyle = "rgb(87, 48, 0";
+  ctx.fillRect(0, canvas.height - 150, canvas.width, 150);
+}
+
+let timings = [400, 900, 1300];
+
+setInterval(function() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if(timing <= timings[0]) {
+      	temple();
+      	rigs[0].palladium();
+    } else if(timing <= timings[1]) {
+      if(rigs.length === 1) {
+        rigs = [];
+        let rig = new Rig(1);
+        rig.move(-canvas.width/2 - 300, 100);
+        rig.steps = [
+          {x: canvas.width + 200, y: canvas.height/2},
+        ];
+        rigs.push(rig);
+        
+        rig = new Rig(1);
+        rig.move(-canvas.width/2 - 350, 100);
+        rig.steps = [
+          {x: canvas.width + 200, y: canvas.height/2 + 100},
+        ];
+        rigs.push(rig);
+      }
+    	troy();
+    	rigs[0].update();
+    	rigs[0].AI();
+    	rigs[1].update();
+    	rigs[1].AI();
+    } else if(timing <= timings[2]) {
+      if(rigs.length === 2) {
+        rigs = [];
+        let rig = new Rig(0.5);
+        rig.move(-50, 100);
+        rigs.push(rig);
+        
+        rig = new Rig(1);
+        rig.move(-canvas.width/2 - 300, 100);
+        rig.steps = [
+          {x: canvas.width/2 - 100, y: canvas.height/2},
+          {x: -200, y: canvas.height/2},
+        ];
+        rigs.push(rig);
+        
+        rig = new Rig(1);
+        rig.move(-canvas.width/2 - 350, 100);
+        rig.steps = [
+          {x: canvas.width/2 - 100, y: canvas.height/2 + 100, action: {type: "grab", thing: rigs[0]}},
+          {x: -200, y: canvas.height/2 + 100},
+        ];
+        rigs.push(rig);
+      }
+      temple();
+      rigs[0].palladium();
+      rigs[1].update();
+    	rigs[1].AI();
+    	rigs[2].update();
+    	rigs[2].AI();
+    } else {
+      if(timing === timings[2] + 1) {
+        rigs[1].steps = [
+          {x: -200, y: canvas.height/2},
+        ];
+        rigs[2].steps = [
+          {x: -200, y: canvas.height/2 + 100},
+        ];
+      }
+        temple();
+        rigs[0].palladium();
+        rigs[1].update();
+    	  rigs[1].AI();
+    	  rigs[2].update();
+    	  rigs[2].AI();
+    }
+    timing+=1;
+}, 10);
+
+
+</script>
+</body>
+</html>
