@@ -141,6 +141,9 @@ Rig.prototype.move = function(x, y) {
   this.leg2.x+=x;
   this.leg2.y+=y;
 }
+Rig.prototype.stance = function(s) {
+  
+};
 Rig.prototype.palladium = function() {
   ctx.strokeStyle = "rgb(100, 100, 100)"
   this.arm1.draw();
@@ -335,66 +338,106 @@ function tree(x, y, s) {
   ctx.lineTo(x + 50 * s, y);
   ctx.fill();
 }
-function docks() {
+function docks(offset) {
   // ground + sky
   ctx.fillStyle = "rgb(93, 226, 231)"
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(offset, 0, canvas.width * 4, canvas.height);
   ctx.fillStyle = "rgb(34, 204, 4)"
-  ctx.fillRect(0, canvas.height - 300, canvas.width, 300);
-}
-function troy() {
-  // ground + sky
-  ctx.fillStyle = "rgb(93, 226, 231)"
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "rgb(34, 204, 4)"
-  ctx.fillRect(0, canvas.height - 300, canvas.width, 300);
-  
-  // castle walls
-  ctx.fillStyle = "rgb(200, 200, 200)"
-  ctx.fillRect(0, canvas.height - 500, canvas.width, 200);
-  ctx.fillStyle = "rgb(180, 180, 180)"
-  for(let x = 0; x < canvas.width; x+=50) {
-    ctx.fillRect(x, canvas.height - 515, 25, 15);
+  ctx.fillRect(offset, canvas.height - 300, canvas.width, 300);
+  ctx.fillStyle = "rgb(5, 82, 176)"
+  ctx.fillRect(offset + canvas.width, canvas.height * 0.55, canvas.width * 3, canvas.height * 0.45);
+  ctx.fillStyle = "rgb(168, 99, 24)"
+  ctx.fillRect(offset + canvas.width, canvas.height * 0.65, canvas.width * 0.5, canvas.height * 0.2);
+  ctx.fillStyle = "rgb(148, 79, 4)"
+  for(let i = offset + canvas.width * 1.02; i < offset + canvas.width * 1.5; i+=canvas.width * 0.05) {
+    ctx.fillRect(i, canvas.height * 0.85, canvas.width * 0.025, canvas.height * 0.02);
+    ctx.fillRect(i - canvas.width * 0.01, canvas.height * 0.65, canvas.width * 0.005, canvas.height * 0.2);
   }
-  
-  // trees
-  tree(100, canvas.height - 280, 1);
-  tree(canvas.width - 90, canvas.height - 325, 0.8);
-}
-function temple() {
-  ctx.fillStyle = "rgb(200, 200, 200)"
-  ctx.fillRect(0, 0, canvas.width, canvas.height - 300);
-  ctx.fillStyle = "rgb(180, 180, 180)";
-  ctx.fillRect(0, canvas.height - 300, canvas.width, 300);
-  // platform 5
-  ctx.fillStyle = "rgb(170, 170, 170)"
+  ctx.fillStyle = "rgb(18, 145, 1)"
   ctx.beginPath();
-  ctx.moveTo(canvas.width/2 - 100, canvas.height - 200);
-  ctx.lineTo(canvas.width/2 - 170, canvas.height - 100);
-  ctx.lineTo(canvas.width/2 + 50, canvas.height - 100);
-  ctx.lineTo(canvas.width/2 + 100, canvas.height - 200);
+  ctx.arc(offset + canvas.width * 3.5, canvas.height * 0.65, canvas.width * 0.32, Math.PI, 0);
   ctx.fill();
   ctx.fillStyle = "rgb(150, 150, 150)"
   ctx.beginPath();
-  ctx.moveTo(canvas.width/2 + 50, canvas.height - 100);
-  ctx.lineTo(canvas.width/2 - 170, canvas.height - 100);
-  ctx.lineTo(canvas.width/2 - 170, canvas.height - 50);
-  ctx.lineTo(canvas.width/2 + 50, canvas.height - 50);
+  ctx.arc(offset + canvas.width * 3.5, canvas.height * 0.65, canvas.width * 0.3, Math.PI, 0);
   ctx.fill();
-  ctx.fillStyle = "rgb(160, 160, 160)"
+  ctx.fillStyle = "rgb(18, 145, 1)"
   ctx.beginPath();
-  ctx.moveTo(canvas.width/2 + 100, canvas.height - 200);
-  ctx.lineTo(canvas.width/2 + 50, canvas.height - 100);
-  ctx.lineTo(canvas.width/2 + 50, canvas.height - 50);
-  ctx.lineTo(canvas.width/2 + 100, canvas.height - 150);
+  ctx.arc(offset + canvas.width * 3.8, canvas.height * 0.65, canvas.width * 0.22, Math.PI + 1, 0);
   ctx.fill();
+  ctx.beginPath();
+  ctx.arc(offset + canvas.width * 3.2, canvas.height * 0.65, canvas.width * 0.22, Math.PI, -1);
+  ctx.fill();
+  ctx.fillStyle = "rgb(150, 150, 150)"
+  ctx.beginPath();
+  ctx.arc(offset + canvas.width * 3.2, canvas.height * 0.65, canvas.width * 0.2, Math.PI, 0);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(offset + canvas.width * 3.8, canvas.height * 0.65, canvas.width * 0.2, Math.PI, 0);
+  ctx.fill();
+  ctx.fillStyle = "rgb(18, 145, 1)"
+  ctx.fillRect(offset + canvas.width * 3, canvas.height * 0.65, canvas.width, canvas.height * 0.05)
+}
+function troy(offset) {
+  // ground + sky
+  ctx.fillStyle = "rgb(93, 226, 231)"
+  ctx.fillRect(offset, 0, canvas.width * 2, canvas.height);
+  ctx.fillStyle = "rgb(34, 204, 4)"
+  ctx.fillRect(offset, canvas.height/2, canvas.width, canvas.height);
+  
+  // castle walls
+  ctx.fillStyle = "rgb(200, 200, 200)"
+  ctx.fillRect(offset, canvas.height/4, canvas.width * 1.5, canvas.height/4);
+  ctx.fillStyle = "rgb(180, 180, 180)"
+  for(let x = 0; x < canvas.width * 1.5; x+=canvas.width * 0.1) {
+    ctx.fillRect(x + offset, canvas.height/4 - canvas.height * 0.02, canvas.width * 0.05, canvas.height * 0.02);
+  }
+  
+  // trees
+  ctx.fillStyle = "rgb(181, 113, 4)"
+  ctx.fillRect(offset, canvas.height * 0.7, canvas.width, canvas.height * 0.15);
+  ctx.fillStyle = "rgb(170, 170, 170)"
+  ctx.fillRect(offset + canvas.width * 0.81, canvas.height * 0.65, canvas.width * 0.1, canvas.height * 0.2);
+  ctx.fillStyle = "rgb(165, 165, 165)"
+  ctx.fillRect(offset + canvas.width * 0.9, canvas.height * 0.60, canvas.width * 0.1, canvas.height * 0.25);
+  ctx.fillStyle = "rgb(150, 150, 150)"
+  ctx.fillRect(offset + canvas.width * 0.9, canvas.height * 0.75, canvas.width * 0.1, canvas.height * 0.1);
+  ctx.fillRect(offset + canvas.width * 0.81, canvas.height * 0.8, canvas.width * 0.1, canvas.height * 0.05);
+  /**
+  ctx.fillStyle = "rgb(100, 100, 100)"
+  ctx.beginPath();
+  ctx.arc(offset + x, canvas.height * 0.75, canvas.width * 0.01, Math.PI, 0);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(offset + x, canvas.height * 0.75, canvas.width * 0.01, Math.PI, 0);
+  ctx.fill();
+  */
+  tree(canvas.width * 0.1 + offset, canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+  tree(canvas.width * 0.7 + offset, canvas.height/10 * 6, canvas.height * 0.0001 * 20);
+  // temple
+  ctx.fillStyle = "rgb(160, 160, 160)"
+  ctx.fillRect(offset + canvas.width * 1.05, 0, canvas.width * 0.15, canvas.height/2);
+  ctx.fillStyle = "rgb(200, 200, 200)"
+  ctx.fillRect(offset + canvas.width * 1.06, 0, canvas.width * 0.01, canvas.height/2);
+  ctx.fillStyle = "rgb(150, 150, 150)"
+  ctx.fillRect(offset + canvas.width * 1.2, 0, canvas.width, canvas.height/0.01);
+  ctx.fillStyle = "rgb(180, 180, 180)"
+  ctx.fillRect(offset + canvas.width, canvas.height * 0.45, canvas.width, canvas.height);
+  ctx.fillStyle = "rgb(170, 170, 170)"
+  ctx.fillRect(offset + canvas.width * 1.15, 0, canvas.width * 0.2, canvas.height);
+  ctx.fillStyle = "rgb(210, 210, 210)"
+  ctx.fillRect(offset + canvas.width * 1.16, 0, canvas.width * 0.012, canvas.height);
+  ctx.fillStyle = "rgb(130, 130, 130)"
+  ctx.fillRect(offset + canvas.width * 1.4, canvas.height * 0.8, canvas.width * 0.4, canvas.height * 0.1);
+  ctx.fillStyle = "rgb(150, 150, 150)"
+  ctx.fillRect(offset + canvas.width * 1.4, canvas.height * 0.6, canvas.width * 0.4, canvas.height * 0.2);
 }
 function camp() {
   ctx.fillStyle = "rgb(1, 47, 74)"
-  ctx.fillRect(0, 0, canvas.width, canvas.height - 300);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "rgb(11, 82, 0)";
-  ctx.fillRect(0, canvas.height - 500, canvas.width, 500);
-  ctx.fillStyle = "rgb(87, 48, 0";
+  ctx.fillRect(0, canvas.height/2, canvas.width, 500);
+  ctx.fillStyle = "rgb(87, 48, 0)";
   ctx.fillRect(0, canvas.height - 150, canvas.width, 150);
 }
 
@@ -402,8 +445,10 @@ let timings = [400, 900, 1300];
 
 setInterval(function() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //camp();
+    temple(-timing)
     if(timing <= timings[0]) {
-      	temple();
+      	temple(-timing);
       	rigs[0].palladium();
     } else if(timing <= timings[1]) {
       if(rigs.length === 1) {
@@ -465,12 +510,12 @@ setInterval(function() {
           {x: -200, y: canvas.height/2 + 100},
         ];
       }
-        temple();
-        rigs[0].palladium();
-        rigs[1].update();
-    	  rigs[1].AI();
-    	  rigs[2].update();
-    	  rigs[2].AI();
+      temple();
+      rigs[0].palladium();
+      rigs[1].update();
+  	  rigs[1].AI();
+  	  rigs[2].update();
+  	  rigs[2].AI();
     }
     timing+=1;
 }, 10);
