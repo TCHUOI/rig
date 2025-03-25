@@ -109,14 +109,14 @@ Rig.prototype.moveTo = function(x, y) {
   let yDif = this.y;
   this.x-=xDif;
   this.y-=yDif;
-  this.arm1.x+=xDif;
-  this.arm1.y+=yDif;
-  this.arm2.x+=xDif;
-  this.arm2.y+=yDif;
-  this.leg1.x+=xDif;
-  this.leg1.y+=yDif;
-  this.leg2.x+=xDif;
-  this.leg2.y+=yDif;
+  this.arm1.x-=xDif;
+  this.arm1.y-=yDif;
+  this.arm2.x-=xDif;
+  this.arm2.y-=yDif;
+  this.leg1.x-=xDif;
+  this.leg1.y-=yDif;
+  this.leg2.x-=xDif;
+  this.leg2.y-=yDif;
   
   this.x+=x;
   this.y+=y;
@@ -152,22 +152,14 @@ Rig.prototype.palladium = function() {
   this.leg2.draw();
   this.walkCycle+=1;
   this.arm1.reverse = true;
-  this.arm1.update(this.x + 20 * this.scaleFactor, this.y - 40 + 35 * this.scaleFactor);
-  this.arm2.update(this.x + 75 * this.scaleFactor,
-      this.y - 40 - 10 * this.scaleFactor);
+  this.arm1.update(this.x + 20 * this.scaleFactor, this.y - 40 + 55 * this.scaleFactor);
+  this.arm2.update(this.x + 45 * this.scaleFactor,
+      this.y - 40);
       
-  ctx.strokeStyle = "brown"
+  ctx.strokeStyle = "grey"
   ctx.beginPath();
-  ctx.arc(this.x + 35 * this.scaleFactor, this.y - 40 + 10 * this.scaleFactor, 50 * this.scaleFactor, -Math.PI/3 - 0.5, Math.PI/3 - 0.5);
+  ctx.arc(this.x + 5 * this.scaleFactor, this.y - 40 + 30 * this.scaleFactor, 50 * this.scaleFactor, -Math.PI/3 - 0.1, Math.PI/3 - 0.1);
   ctx.stroke();
-  ctx.strokeStyle = "rgb(30, 30, 30)";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(this.x + 40 * this.scaleFactor, this.y - 40 - 40 * this.scaleFactor);
-  ctx.lineTo(this.x + 15 * this.scaleFactor, this.y - 40 + 30 * this.scaleFactor);
-  ctx.lineTo(this.x + 75 * this.scaleFactor, this.y - 40 + 30 * this.scaleFactor);
-  ctx.stroke();
-  ctx.beginPath();
 
 
   this.leg1.update(this.x + 10 * this.scaleFactor, 
@@ -183,8 +175,42 @@ Rig.prototype.palladium = function() {
   ctx.beginPath();
   ctx.arc(this.x + 7 * increase(this.face), this.y - 40 - 20 * this.scaleFactor, 20 * this.scaleFactor, 0, 2 * Math.PI);
   ctx.stroke();
+  
+  ctx.strokeStyle = "rgb(0, 0, 0)"
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(this.x - 20, this.y - 40 + 60 * this.scaleFactor);
+  ctx.lineTo(this.x + 50, this.y - 40 + 55 * this.scaleFactor);
+  ctx.stroke();
   this.arm1.x = this.x + 5 * increase(this.face);
   this.arm2.x = this.x + 5 * increase(this.face);
+}
+Rig.prototype.cheer = function() {
+  ctx.strokeStyle = "rgb(" + (100 - this.scaleFactor * 100) + ", " + (100 - this.scaleFactor * 100) + ", " + (100 - this.scaleFactor * 100) + ")"
+  this.arm1.draw();
+  this.arm2.draw();
+  this.leg1.draw();
+  this.leg2.draw();
+  this.walkCycle+=1;
+  this.arm1.reverse = false;
+  this.leg1.reverse = true;
+  this.arm1.update(this.x - 30 * this.scaleFactor, this.y - 40 - 55 * this.scaleFactor * (1 + Math.cos(this.walkCycle/10) * 0.5));
+  this.arm2.update(this.x + 30 * this.scaleFactor, this.y - 40 - 55 * this.scaleFactor * (1 + Math.cos(this.walkCycle/10) * 0.5));
+
+
+  this.leg1.update(this.x - 15 * this.scaleFactor, 
+      this.y - 40 + 180 * this.scaleFactor);
+  this.leg2.update(this.x + 15 * this.scaleFactor, 
+      this.y - 40 + 180 * this.scaleFactor);
+  ctx.strokeStyle = "rgb(" + (100 - this.scaleFactor * 100) + ", " + (100 - this.scaleFactor * 100) + ", " + (100 - this.scaleFactor * 100) + ")"
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(this.x, this.y - 40);
+  ctx.lineTo(this.x, this.y - 40 + 80 * this.scaleFactor);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(this.x, this.y - 40 - 20 * this.scaleFactor, 20 * this.scaleFactor, 0, 2 * Math.PI);
+  ctx.stroke();
 }
 Rig.prototype.update = function() {
     ctx.strokeStyle = "rgb(0, 0, 0)"
@@ -378,9 +404,9 @@ function docks(offset) {
   ctx.fillStyle = "rgb(18, 145, 1)"
   ctx.fillRect(offset + canvas.width * 3, canvas.height * 0.65, canvas.width, canvas.height * 0.05)
 }
-function troy(offset) {
+function troy(offset, day) {
   // ground + sky
-  ctx.fillStyle = "rgb(93, 226, 231)"
+  ctx.fillStyle = "rgb(" + (93 - day * 92) + ", " + (226 - day * 179) + ", " + (231 - day * 157) + ")"
   ctx.fillRect(offset, 0, canvas.width * 2, canvas.height);
   ctx.fillStyle = "rgb(34, 204, 4)"
   ctx.fillRect(offset, canvas.height/2, canvas.width, canvas.height);
@@ -412,7 +438,6 @@ function troy(offset) {
   ctx.arc(offset + x, canvas.height * 0.75, canvas.width * 0.01, Math.PI, 0);
   ctx.fill();
   */
-  tree(canvas.width * 0.1 + offset, canvas.height/10 * 9, canvas.height * 0.0001 * 45);
   tree(canvas.width * 0.7 + offset, canvas.height/10 * 6, canvas.height * 0.0001 * 20);
   // temple
   ctx.fillStyle = "rgb(160, 160, 160)"
@@ -431,6 +456,9 @@ function troy(offset) {
   ctx.fillRect(offset + canvas.width * 1.4, canvas.height * 0.8, canvas.width * 0.4, canvas.height * 0.1);
   ctx.fillStyle = "rgb(150, 150, 150)"
   ctx.fillRect(offset + canvas.width * 1.4, canvas.height * 0.6, canvas.width * 0.4, canvas.height * 0.2);
+  
+  ctx.fillStyle = "rgb(0, 0, 0, " + day + ")"
+  ctx.fillRect(offset + canvas.width * 1.3, canvas.height * 0.01, canvas.width * 1, canvas.height);
 }
 function camp() {
   ctx.fillStyle = "rgb(1, 47, 74)"
@@ -439,83 +467,104 @@ function camp() {
   ctx.fillRect(0, canvas.height/2, canvas.width, 500);
   ctx.fillStyle = "rgb(87, 48, 0)";
   ctx.fillRect(0, canvas.height - 150, canvas.width, 150);
+  ctx.fillStyle = "rgb(100, 100, 100)";
+  ctx.fillRect(canvas.width * 0.40, canvas.height * 0.82, canvas.width * 0.2, canvas.height * 0.15);
+  ctx.fillStyle = "rgb(70, 70, 70)";
+  ctx.fillRect(canvas.width * 0.40, canvas.height * 0.8, canvas.width * 0.2, canvas.height * 0.1);
 }
 
-let timings = [400, 900, 1300];
+let timings = [600, 600, 600, 600, 600];
+let scene = 0;
+let newRig;
 
 setInterval(function() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //camp();
-    temple(-timing)
-    if(timing <= timings[0]) {
-      	temple(-timing);
-      	rigs[0].palladium();
-    } else if(timing <= timings[1]) {
-      if(rigs.length === 1) {
-        rigs = [];
-        let rig = new Rig(1);
-        rig.move(-canvas.width/2 - 300, 100);
-        rig.steps = [
-          {x: canvas.width + 200, y: canvas.height/2},
-        ];
-        rigs.push(rig);
-        
-        rig = new Rig(1);
-        rig.move(-canvas.width/2 - 350, 100);
-        rig.steps = [
-          {x: canvas.width + 200, y: canvas.height/2 + 100},
-        ];
-        rigs.push(rig);
+    if(scene > timings.length) {
+      return;
+    }
+    switch(scene) {
+      case 0:
+        	troy(-canvas.width * 1 * (timing/timings[0]), 0);
+        	rigs[0].palladium();
+        	rigs[0].moveTo(-canvas.width * 1 * (timing/timings[0]) + canvas.width * 1.6, canvas.height * 0.65)
+        	tree(canvas.width * 0.1 -canvas.width * 1 * (timing/timings[0]), canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+      break;
+      case 1:
+        	troy(-canvas.width  + canvas.width * (timing/timings[1]), 0);
+        	rigs[0].palladium();
+        	rigs[0].moveTo(-canvas.width + canvas.width * (timing/timings[1]) + canvas.width * 1.6, canvas.height * 0.65)
+        	tree(canvas.width * 0.1 -canvas.width  + canvas.width * (timing/timings[1]), canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+      break;
+      case 2:
+        troy(0, timing/timings[2]);
+        tree(canvas.width * 0.1, canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+      break;
+      case 3:
+          //console.log(rigs)
+        	troy(0, 1);
+        	rigs[0].update();
+        	rigs[0].AI();
+        	rigs[1].update();
+        	rigs[1].AI();
+        	tree(canvas.width * 0.1, canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+      break;
+      case 4:
+        	camp();
+        	for(let i = 1; i < rigs.length; i++) {
+        	  rigs[i].cheer();
+        	}
+        	rigs[0].palladium();
+      break;
+    }
+    if(timing >= timings[scene]) {
+      scene+=1;
+      timing = 0;
+      switch(scene) {
+        case 3:
+          rigs = [];
+          newRig = new Rig(1);
+          newRig.move(-canvas.width/2 - 350, 100);
+          newRig.steps = [
+            {x: canvas.width * 0.75, y: canvas.height * 0.6},
+            {x: canvas.width * 1.1, y: canvas.height * 0.5},
+          ];
+          rigs.push(newRig);
+          
+          newRig = new Rig(1);
+          newRig.move(-canvas.width/2 - 450, 100);
+          newRig.steps = [
+            {x: canvas.width * 0.75, y: canvas.height * 0.6},
+            {x: canvas.width * 1.1, y: canvas.height * 0.5},
+          ];
+          rigs.push(newRig);
+        break;
+        case 4:
+          rigs = [];
+          newRig = new Rig(0.5);
+          newRig.moveTo(canvas.width * 0.5, canvas.height * 0.8);
+          rigs.push(newRig);
+          
+          newRig = new Rig(1.5);
+          newRig.moveTo(canvas.width * 0.3, canvas.height * 0.7);
+          rigs.push(newRig);
+          
+          newRig = new Rig(1.5);
+          newRig.moveTo(canvas.width * 0.7, canvas.height * 0.7);
+          rigs.push(newRig);
+          
+          for(let x = 0; x < canvas.width; x+=60) {
+            newRig = new Rig(0.5);
+            newRig.moveTo(x, canvas.height * 0.55);
+            rigs.push(newRig);
+            newRig = new Rig(0.7);
+            newRig.moveTo(x + 20, canvas.height * 0.57);
+            rigs.push(newRig);
+            newRig = new Rig(0.9);
+            newRig.moveTo(x - 30, canvas.height * 0.63);
+            rigs.push(newRig);
+          }
+        break;
       }
-    	troy();
-    	rigs[0].update();
-    	rigs[0].AI();
-    	rigs[1].update();
-    	rigs[1].AI();
-    } else if(timing <= timings[2]) {
-      if(rigs.length === 2) {
-        rigs = [];
-        let rig = new Rig(0.5);
-        rig.move(-50, 100);
-        rigs.push(rig);
-        
-        rig = new Rig(1);
-        rig.move(-canvas.width/2 - 300, 100);
-        rig.steps = [
-          {x: canvas.width/2 - 100, y: canvas.height/2},
-          {x: -200, y: canvas.height/2},
-        ];
-        rigs.push(rig);
-        
-        rig = new Rig(1);
-        rig.move(-canvas.width/2 - 350, 100);
-        rig.steps = [
-          {x: canvas.width/2 - 100, y: canvas.height/2 + 100, action: {type: "grab", thing: rigs[0]}},
-          {x: -200, y: canvas.height/2 + 100},
-        ];
-        rigs.push(rig);
-      }
-      temple();
-      rigs[0].palladium();
-      rigs[1].update();
-    	rigs[1].AI();
-    	rigs[2].update();
-    	rigs[2].AI();
-    } else {
-      if(timing === timings[2] + 1) {
-        rigs[1].steps = [
-          {x: -200, y: canvas.height/2},
-        ];
-        rigs[2].steps = [
-          {x: -200, y: canvas.height/2 + 100},
-        ];
-      }
-      temple();
-      rigs[0].palladium();
-      rigs[1].update();
-  	  rigs[1].AI();
-  	  rigs[2].update();
-  	  rigs[2].AI();
     }
     timing+=1;
 }, 10);
