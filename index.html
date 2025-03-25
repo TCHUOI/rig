@@ -603,8 +603,16 @@ function credits() {
   ctx.font = "30px serif";
   ctx.fillText("by Thomas Cui", canvas.width/2, canvas.height * 0.15);
 }
+function caption(txt, s, e) {
+  if(timing >= s && timing <= e) {
+    ctx.textAlign = "center"
+    ctx.fillStyle = "rgb(255, 255, 255)"
+    ctx.font = "30px serif";
+    ctx.fillText(txt, canvas.width/2, canvas.height * 0.95);
+  }
+}
 
-let timings = [600, 600, 600, 600, 600, 300, 700, 500, 400, 100, 400];
+let timings = [700, 600, 400, 600, 800, 700, 700, 500, 400, 100, 400];
 let scene = 0;
 let newRig;
 
@@ -620,25 +628,32 @@ setInterval(function() {
         	rigs[0].palladium();
         	rigs[0].moveTo(-canvas.width * 1 * (timing/timings[0]) + canvas.width * 1.6, canvas.height * 0.65)
         	tree(canvas.width * 0.1 -canvas.width * 1 * (timing/timings[0]), canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+        	caption("After nearly 10 years of fighting,", 0, 300)
+        	caption("the Greeks learned about the Palladium", 300, 700)
       break;
       case 1:
         	troy(-canvas.width  + canvas.width * (timing/timings[1]), 0);
         	rigs[0].palladium();
         	rigs[0].moveTo(-canvas.width + canvas.width * (timing/timings[1]) + canvas.width * 1.6, canvas.height * 0.65)
         	tree(canvas.width * 0.1 -canvas.width  + canvas.width * (timing/timings[1]), canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+        	caption("With the Palladium in Troy, ", 0, 300)
+        	caption("the city would not fall.", 300, 600)
       break;
       case 2:
         troy(0, timing/timings[2]);
         tree(canvas.width * 0.1, canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+        caption("So the Greeks came up with a plan", 0, 400)
       break;
       case 3:
-          //console.log(rigs)
         	troy(0, 1);
         	rigs[0].update();
         	rigs[0].AI();
         	rigs[1].update();
         	rigs[1].AI();
         	tree(canvas.width * 0.1, canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+        	caption("With the help of Odysseus, ", 0, 300)
+        	caption("Diomedes stole the Palladium.", 300, 600)
+        	
       break;
       case 4:
         	camp();
@@ -646,6 +661,8 @@ setInterval(function() {
         	  rigs[i].cheer();
         	}
         	rigs[0].palladium();
+        	caption("They brought the Palladium to camp, ", 0, 400)
+        	caption("where they used it to encourage the men", 400, 800)
       break;
       case 5:
         	blacksmith();
@@ -653,6 +670,8 @@ setInterval(function() {
         	  rigs[i].update();
         	  rigs[i].AI();
         	}
+        	caption("Then Odysseus ordered a skilled craftsmen", 0, 400)
+        	caption("to build a giant wooden horse", 400, 700)
       break;
       case 6:
         	docks(0);
@@ -660,9 +679,13 @@ setInterval(function() {
         	  rigs[i].update();
         	  rigs[i].AI();
         	}
+        	caption("The rest of the Greek army boarded", 0, 400)
+        	caption("their boats and sailed away.", 400, 700)
       break;
       case 7:
         	docks(-canvas.width * 1 * (timing/timings[6]));
+        	caption("They sailed behind the island", 0, 400)
+        	caption("of Tenedos to hide from the Trojans.", 400, 700)
       break;
       case 8:
         	docks(-canvas.width - canvas.width * 2.2 * (timing/timings[7]));
@@ -724,13 +747,13 @@ setInterval(function() {
           
           for(let x = 0; x < canvas.width; x+=60) {
             newRig = new Rig(0.5);
-            newRig.moveTo(x, canvas.height * 0.55);
+            newRig.moveTo(x, canvas.height * 0.53);
             rigs.push(newRig);
             newRig = new Rig(0.7);
-            newRig.moveTo(x + 20, canvas.height * 0.57);
+            newRig.moveTo(x + 20, canvas.height * 0.55);
             rigs.push(newRig);
             newRig = new Rig(0.9);
-            newRig.moveTo(x - 30, canvas.height * 0.63);
+            newRig.moveTo(x - 30, canvas.height * 0.57);
             rigs.push(newRig);
           }
         break;
