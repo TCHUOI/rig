@@ -50,6 +50,48 @@ function getPos(x, y, r) {
   };
 }
 
+function drawTrojanHorse(x, y) {
+    // Draw the body of the horse with a curved shape
+    ctx.fillStyle = "saddlebrown";
+    ctx.beginPath();
+    ctx.moveTo(x, y + 50);
+    ctx.quadraticCurveTo(x + 100, y - 50, x + 200, y + 50);
+    ctx.lineTo(x + 200, y + 100);
+    ctx.lineTo(x, y + 100);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Draw the neck connecting the head to the body
+    ctx.beginPath();
+    ctx.moveTo(x + 180, y + 10);
+    ctx.lineTo(x + 180, y - 20);
+    ctx.lineTo(x + 200, y - 20);
+    ctx.lineTo(x + 200, y + 10);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Draw the head of the horse with a more natural shape
+    ctx.beginPath();
+    ctx.moveTo(x + 200, y - 20);
+    ctx.quadraticCurveTo(x + 230, y - 50, x + 220, y - 70);
+    ctx.quadraticCurveTo(x + 210, y - 90, x + 180, y - 70);
+    ctx.quadraticCurveTo(x + 170, y - 50, x + 180, y - 20);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Draw the legs of the horse
+    ctx.fillRect(x + 20, y + 100, 20, 50);
+    ctx.fillRect(x + 160, y + 100, 20, 50);
+    
+    // Draw the wheels
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.arc(x + 30, y + 160, 15, 0, Math.PI * 2);
+    ctx.arc(x + 170, y + 160, 15, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+
 function Limb(x, y, length1, length2, reverse) {
   this.x = x;
   this.y = y;
@@ -141,8 +183,33 @@ Rig.prototype.move = function(x, y) {
   this.leg2.x+=x;
   this.leg2.y+=y;
 }
-Rig.prototype.stance = function(s) {
-  
+Rig.prototype.stand = function(s) {
+  ctx.strokeStyle = "rgb(" + (100 - this.scaleFactor * 100) + ", " + (100 - this.scaleFactor * 100) + ", " + (100 - this.scaleFactor * 100) + ")"
+  this.arm1.draw();
+  this.arm2.draw();
+  this.leg1.draw();
+  this.leg2.draw();
+  this.walkCycle+=1;
+  this.arm1.reverse = true;
+  this.arm2.reverse = false;
+  this.leg1.reverse = true;
+  this.arm1.update(this.x - 30 * this.scaleFactor, this.y - 40 + 80 * this.scaleFactor);
+  this.arm2.update(this.x + 30 * this.scaleFactor, this.y - 40 + 80 * this.scaleFactor);
+
+
+  this.leg1.update(this.x - 15 * this.scaleFactor, 
+      this.y - 40 + 180 * this.scaleFactor);
+  this.leg2.update(this.x + 15 * this.scaleFactor, 
+      this.y - 40 + 180 * this.scaleFactor);
+  ctx.strokeStyle = "rgb(" + (100 - this.scaleFactor * 100) + ", " + (100 - this.scaleFactor * 100) + ", " + (100 - this.scaleFactor * 100) + ")"
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(this.x, this.y - 40);
+  ctx.lineTo(this.x, this.y - 40 + 80 * this.scaleFactor);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(this.x, this.y - 40 - 20 * this.scaleFactor, 20 * this.scaleFactor, 0, 2 * Math.PI);
+  ctx.stroke();
 };
 Rig.prototype.palladium = function() {
   ctx.strokeStyle = "rgb(100, 100, 100)"
@@ -364,14 +431,31 @@ function tree(x, y, s) {
   ctx.lineTo(x + 50 * s, y);
   ctx.fill();
 }
+function ship(x, y, scale, rgb) {
+  ctx.fillStyle = "rgb(165, 94, 5)"
+  ctx.beginPath();
+  ctx.ellipse(x, y, 100 * scale, 40 * scale, 0, 0, -Math.PI)
+  ctx.fill();
+  ctx.fillStyle = "rgb(145, 84, 4)"
+  ctx.fillRect(x + 10 * scale, y - 40 * scale, 7 * scale, 40 * scale);
+  ctx.fillStyle = rgb;
+  ctx.fillRect(x - 5 * scale, y - 80 * scale, 40 * scale, 60 * scale);
+  ctx.fillStyle = "rgb(165, 104, 24)"
+  ctx.fillRect(x - 100 * scale, y, 200 * scale, 5 * scale);
+  ctx.fillStyle = "rgb(5, 82, 176)";
+  ctx.fillRect(x - 75 * scale, y + 30 * scale, 150 * scale, 10 * scale);
+}
 function docks(offset) {
   // ground + sky
   ctx.fillStyle = "rgb(93, 226, 231)"
-  ctx.fillRect(offset, 0, canvas.width * 4, canvas.height);
+  ctx.fillRect(offset, 0, canvas.width * 5, canvas.height);
   ctx.fillStyle = "rgb(34, 204, 4)"
-  ctx.fillRect(offset, canvas.height - 300, canvas.width, 300);
+  ctx.fillRect(offset, canvas.height * 0.5, canvas.width, canvas.height * 0.5);
   ctx.fillStyle = "rgb(5, 82, 176)"
-  ctx.fillRect(offset + canvas.width, canvas.height * 0.55, canvas.width * 3, canvas.height * 0.45);
+  ctx.fillRect(offset + canvas.width, canvas.height * 0.55, canvas.width * 4, canvas.height * 0.45);
+  
+  ship(offset + canvas.width * 1.3, canvas.height * 0.6, 1.5, "rgb(255, 0, 0)")
+  
   ctx.fillStyle = "rgb(168, 99, 24)"
   ctx.fillRect(offset + canvas.width, canvas.height * 0.65, canvas.width * 0.5, canvas.height * 0.2);
   ctx.fillStyle = "rgb(148, 79, 4)"
@@ -402,7 +486,20 @@ function docks(offset) {
   ctx.arc(offset + canvas.width * 3.8, canvas.height * 0.65, canvas.width * 0.2, Math.PI, 0);
   ctx.fill();
   ctx.fillStyle = "rgb(18, 145, 1)"
-  ctx.fillRect(offset + canvas.width * 3, canvas.height * 0.65, canvas.width, canvas.height * 0.05)
+  ctx.fillRect(offset + canvas.width * 2.8, canvas.height * 0.6, canvas.width * 1.4, canvas.height * 0.05)
+  ship(offset + canvas.width * 3.6, canvas.height * 0.69, 0.9, "rgb(255, 255, 0)")
+  ship(offset + canvas.width * 3.3, canvas.height * 0.71, 1.1, "rgb(0, 255, 0)")
+  ship(offset + canvas.width * 3.5, canvas.height * 0.75, 1.3, "rgb(255, 255, 255)")
+  ship(offset + canvas.width * 3.8, canvas.height * 0.76, 1.3, "rgb(0, 0, 255)")
+  ship(offset + canvas.width * 3.3, canvas.height * 0.81, 1.5, "rgb(255, 0, 255)")
+  ship(offset + canvas.width * 3.9, canvas.height * 0.83, 1.6, "rgb(0, 255, 255)")
+}
+function outTroy() {
+  // ground + sky
+  ctx.fillStyle = "rgb(93, 226, 231)"
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgb(34, 204, 4)"
+  ctx.fillRect(0, canvas.height/2, canvas.width, canvas.height);
 }
 function troy(offset, day) {
   // ground + sky
@@ -455,7 +552,7 @@ function troy(offset, day) {
   ctx.fillStyle = "rgb(130, 130, 130)"
   ctx.fillRect(offset + canvas.width * 1.4, canvas.height * 0.8, canvas.width * 0.4, canvas.height * 0.1);
   ctx.fillStyle = "rgb(150, 150, 150)"
-  ctx.fillRect(offset + canvas.width * 1.4, canvas.height * 0.6, canvas.width * 0.4, canvas.height * 0.2);
+  ctx.fillRect(offset + canvas.width * 1.4, canvas.height * 0.55, canvas.width * 0.4, canvas.height * 0.2);
   
   ctx.fillStyle = "rgb(0, 0, 0, " + day + ")"
   ctx.fillRect(offset + canvas.width * 1.3, canvas.height * 0.01, canvas.width * 1, canvas.height);
@@ -472,14 +569,49 @@ function camp() {
   ctx.fillStyle = "rgb(70, 70, 70)";
   ctx.fillRect(canvas.width * 0.40, canvas.height * 0.8, canvas.width * 0.2, canvas.height * 0.1);
 }
+function blacksmith() {
+  ctx.fillStyle = "rgb(150, 150, 150)"
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgb(100, 100, 100)";
+  ctx.fillRect(0, canvas.height/2, canvas.width, 500);
+  ctx.fillStyle = "rgb(120, 120, 120)"
+  ctx.fillRect(canvas.width * 0.05, canvas.height * 0.125, canvas.width * 0.4, canvas.height * 0.01);
+  ctx.fillRect(canvas.width * 0.05, canvas.height * 0.25, canvas.width * 0.4, canvas.height * 0.01);
+  ctx.fillRect(canvas.width * 0.05, canvas.height * 0.375, canvas.width * 0.4, canvas.height * 0.01);
+  
+  ctx.fillRect(canvas.width * 0.55, canvas.height * 0.125, canvas.width * 0.4, canvas.height * 0.01);
+  ctx.fillRect(canvas.width * 0.55, canvas.height * 0.25, canvas.width * 0.4, canvas.height * 0.01);
+  ctx.fillRect(canvas.width * 0.55, canvas.height * 0.375, canvas.width * 0.4, canvas.height * 0.01);
+  
+  ctx.fillStyle = "rgb(156, 91, 12)";
+  ctx.fillRect(canvas.width * 0.15, canvas.height * 0.085, canvas.width * 0.2, canvas.height * 0.04);
+  ctx.fillRect(canvas.width * 0.15, canvas.height * 0.21, canvas.width * 0.2, canvas.height * 0.04);
+  
+  ctx.fillRect(canvas.width * 0.7, canvas.height * 0.085, canvas.width * 0.1, canvas.height * 0.04);
+  ctx.fillRect(canvas.width * 0.7, canvas.height * 0.21, canvas.width * 0.1, canvas.height * 0.04);
+  
+  ctx.fillRect(canvas.width * 0.45, canvas.height * 0.75, canvas.width * 0.2, canvas.height * 0.04);
+  ctx.fillRect(canvas.width * 0.5, canvas.height * 0.71, canvas.width * 0.1, canvas.height * 0.04);
+}
+function credits() {
+  ctx.fillStyle = "rgb(0, 0, 0)"
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = "60px serif";
+  ctx.textAlign = "center"
+  ctx.fillStyle = "rgb(255, 255, 255)"
+  ctx.fillText("Palladium and a plan", canvas.width/2, canvas.height * 0.1);
+  ctx.font = "30px serif";
+  ctx.fillText("by Thomas Cui", canvas.width/2, canvas.height * 0.15);
+}
 
-let timings = [600, 600, 600, 600, 600];
+let timings = [600, 600, 600, 600, 600, 300, 700, 500, 400, 100, 400];
 let scene = 0;
 let newRig;
 
 setInterval(function() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if(scene > timings.length) {
+    if(scene >= timings.length) {
+      credits();
       return;
     }
     switch(scene) {
@@ -514,6 +646,44 @@ setInterval(function() {
         	  rigs[i].cheer();
         	}
         	rigs[0].palladium();
+      break;
+      case 5:
+        	blacksmith();
+        	for(let i = 0; i < rigs.length; i++) {
+        	  rigs[i].update();
+        	  rigs[i].AI();
+        	}
+      break;
+      case 6:
+        	docks(0);
+        	for(let i = 0; i < rigs.length; i++) {
+        	  rigs[i].update();
+        	  rigs[i].AI();
+        	}
+      break;
+      case 7:
+        	docks(-canvas.width * 1 * (timing/timings[6]));
+      break;
+      case 8:
+        	docks(-canvas.width - canvas.width * 2.2 * (timing/timings[7]));
+      break;
+      case 9:
+        	docks(-canvas.width * 3.2);
+      break;
+      case 10:
+        	outTroy();
+        	for(let i = 1; i < rigs.length; i++) {
+        	  rigs[i].stand();
+        	}
+        	// castle walls
+          ctx.fillStyle = "rgb(200, 200, 200)"
+          ctx.fillRect(0, canvas.height/4, canvas.width * 1.5, canvas.height/4);
+          ctx.fillStyle = "rgb(180, 180, 180)"
+          for(let x = 0; x < canvas.width * 1.5; x+=canvas.width * 0.1) {
+            ctx.fillRect(x, canvas.height/4 - canvas.height * 0.02, canvas.width * 0.05, canvas.height * 0.02);
+          }
+          rigs[0].cheer();
+          drawTrojanHorse(canvas.width * 0.3, canvas.height * 0.7)
       break;
     }
     if(timing >= timings[scene]) {
@@ -561,6 +731,52 @@ setInterval(function() {
             rigs.push(newRig);
             newRig = new Rig(0.9);
             newRig.moveTo(x - 30, canvas.height * 0.63);
+            rigs.push(newRig);
+          }
+        break;
+        case 5:
+          rigs = [];
+          newRig = new Rig(0.8);
+          newRig.moveTo(-40, canvas.height * 0.45);
+          newRig.steps = [
+            {x: canvas.width * 0.5, y: canvas.height * 0.45},
+          ];
+          rigs.push(newRig);
+          newRig = new Rig(0.9);
+          newRig.moveTo(-40, canvas.height * 0.5);
+          newRig.steps = [
+            {x: canvas.width * 1.1, y: canvas.height * 0.5},
+          ];
+          rigs.push(newRig);
+          rigs.push(newRig);
+          newRig = new Rig(1);
+          newRig.moveTo(canvas.width * 1.1, canvas.height * 0.65);
+          newRig.steps = [
+            {x: canvas.width * 0.6, y: canvas.height * 0.65},
+          ];
+          rigs.push(newRig);
+        break;
+        case 6:
+          rigs = [];
+          for(let x = 0; x < 8; x+=1) {
+            newRig = new Rig(1);
+            newRig.moveTo(-40 - x * 75, canvas.height * 0.55);
+            newRig.steps = [
+              {x: canvas.width * 1.5, y: canvas.height * 0.6},
+            ];
+            rigs.push(newRig);
+          }
+        break;
+        case 7:
+          rigs = [];
+        break;
+        case 10:
+          newRig = new Rig(1.5);
+          newRig.moveTo(canvas.width * 0.2, canvas.height * 0.7);
+          rigs.push(newRig);
+          for(let x = 0; x < canvas.width; x+=canvas.width * 0.1) {
+            newRig = new Rig(0.5);
+            newRig.moveTo(x, canvas.height * 0.25);
             rigs.push(newRig);
           }
         break;
