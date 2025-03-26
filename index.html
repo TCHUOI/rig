@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IK Arm Follow Mouse</title>
+    <title>Palladuyn and a plan</title>
     <style>
         body {
         	margin: 0;
@@ -690,9 +690,10 @@ function caption(txt, s, e) {
   }
 }
 
-let timings = [700, 600, 400, 600, 800, 700, 700, 500, 400, 100, 1600, 200];
+let timings = [300, 700, 600, 400, 600, 800, 700, 700, 500, 400, 100, 1600, 200];
 let scene = 0;
 let newRig;
+let start = false;
 
 setInterval(function() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -702,27 +703,39 @@ setInterval(function() {
     }
     switch(scene) {
       case 0:
-        	troy(-canvas.width * 1 * (timing/timings[0]), 0);
+        ctx.fillStyle = "rgb(0, 0, 0)"
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgb(0, 0, 0)"
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "60px serif";
+        ctx.textAlign = "center"
+        ctx.fillStyle = "rgb(255, 255, 255)"
+        ctx.fillText("Palladium and a plan", canvas.width/2, canvas.height * 0.1);
+        ctx.font = "30px serif";
+        ctx.fillText("by Thomas Cui", canvas.width/2, canvas.height * 0.15);
+      break;
+      case 1:
+        	troy(-canvas.width * 1 * (timing/timings[1]), 0);
         	rigs[0].palladium();
-        	rigs[0].moveTo(-canvas.width * 1 * (timing/timings[0]) + canvas.width * 1.6, canvas.height * 0.65)
-        	tree(canvas.width * 0.1 -canvas.width * 1 * (timing/timings[0]), canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+        	rigs[0].moveTo(-canvas.width * 1 * (timing/timings[1]) + canvas.width * 1.6, canvas.height * 0.65)
+        	tree(canvas.width * 0.1 -canvas.width * 1 * (timing/timings[1]), canvas.height/10 * 9, canvas.height * 0.0001 * 45);
         	caption("After nearly 10 years of fighting,", 0, 300)
         	caption("the Greeks learned about the Palladium", 300, 700)
       break;
-      case 1:
-        	troy(-canvas.width  + canvas.width * (timing/timings[1]), 0);
+      case 2:
+        	troy(-canvas.width  + canvas.width * (timing/timings[2]), 0);
         	rigs[0].palladium();
-        	rigs[0].moveTo(-canvas.width + canvas.width * (timing/timings[1]) + canvas.width * 1.6, canvas.height * 0.65)
-        	tree(canvas.width * 0.1 -canvas.width  + canvas.width * (timing/timings[1]), canvas.height/10 * 9, canvas.height * 0.0001 * 45);
+        	rigs[0].moveTo(-canvas.width + canvas.width * (timing/timings[2]) + canvas.width * 1.6, canvas.height * 0.65)
+        	tree(canvas.width * 0.1 -canvas.width  + canvas.width * (timing/timings[2]), canvas.height/10 * 9, canvas.height * 0.0001 * 45);
         	caption("With the Palladium in Troy, ", 0, 300)
         	caption("the city would not fall.", 300, 600)
       break;
-      case 2:
-        troy(0, timing/timings[2]);
+      case 3:
+        troy(0, timing/timings[3]);
         tree(canvas.width * 0.1, canvas.height/10 * 9, canvas.height * 0.0001 * 45);
         caption("So the Greeks came up with a plan", 0, 400)
       break;
-      case 3:
+      case 4:
         	troy(0, 1);
         	rigs[0].update();
         	rigs[0].AI();
@@ -733,7 +746,7 @@ setInterval(function() {
         	caption("Diomedes stole the Palladium.", 300, 600)
         	
       break;
-      case 4:
+      case 5:
         	camp();
         	for(let i = 3; i < rigs.length; i++) {
         	  rigs[i].cheer();
@@ -750,7 +763,7 @@ setInterval(function() {
         	caption("They brought the Palladium to camp, ", 0, 400)
         	caption("where they used it to encourage the men", 400, 800)
       break;
-      case 5:
+      case 6:
         	blacksmith();
         	for(let i = 0; i < rigs.length; i++) {
         	  rigs[i].update();
@@ -759,7 +772,7 @@ setInterval(function() {
         	caption("Then Odysseus ordered a skilled craftsmen", 0, 400)
         	caption("to build a giant wooden horse", 400, 700)
       break;
-      case 6:
+      case 7:
         	docks(0);
         	for(let i = 0; i < rigs.length; i++) {
         	  rigs[i].update();
@@ -768,18 +781,20 @@ setInterval(function() {
         	caption("The rest of the Greek army boarded", 0, 400)
         	caption("their boats and sailed away.", 400, 700)
       break;
-      case 7:
-        	docks(-canvas.width * 1 * (timing/timings[7]));
-        	caption("They sailed behind the island", 0, 400)
-        	caption("of Tenedos to hide from the Trojans.", 400, 700)
-      break;
       case 8:
-        	docks(-canvas.width - canvas.width * 2.2 * (timing/timings[8]));
+        	docks(-canvas.width * 1 * (timing/timings[8]));
+        	caption("They sailed...", 0, 700)
       break;
       case 9:
-        	docks(-canvas.width * 3.2);
+        	docks(-canvas.width - canvas.width * 2.2 * (timing/timings[9]));
+        	caption("behind the island", 0, 400)
+        	caption("of Tenedos to hide from the Trojans.", 400, 700)
       break;
       case 10:
+        	docks(-canvas.width * 3.2);
+        	caption("of Tenedos to hide from the Trojans.", 0, 100)
+      break;
+      case 11:
         	outTroy();
         	for(let i = 1; i < rigs.length; i++) {
         	  rigs[i].stand();
@@ -799,7 +814,7 @@ setInterval(function() {
         	caption("was tasked with convincing the Trojans", 800, 1200)
         	caption("to take the wooden horse back into their city.", 1200, 1600)
       break;
-      case 11:
+      case 12:
         	ctx.fillStyle = "rgb(0, 0, 0)"
         	ctx.fillRect(0, 0, canvas.width, canvas.height)
         	caption("to be continued...", 0, 200)
@@ -809,7 +824,7 @@ setInterval(function() {
       scene+=1;
       timing = 0;
       switch(scene) {
-        case 3:
+        case 4:
           rigs = [];
           newRig = new Rig(1);
           newRig.moveTo(-350, canvas.height * 0.55);
@@ -827,7 +842,7 @@ setInterval(function() {
           ];
           rigs.push(newRig);
         break;
-        case 4:
+        case 5:
           rigs = [];
           newRig = new Rig(0.5);
           newRig.moveTo(canvas.width * 0.5, canvas.height * 0.8);
@@ -856,7 +871,7 @@ setInterval(function() {
             rigs.push(newRig);
           }
         break;
-        case 5:
+        case 6:
           rigs = [];
           newRig = new Rig(0.8);
           newRig.moveTo(-40, canvas.height * 0.45);
@@ -867,6 +882,7 @@ setInterval(function() {
           newRig = new Rig(0.9);
           newRig.moveTo(-40, canvas.height * 0.5);
           newRig.steps = [
+            {x: canvas.width * 0.6, y: canvas.height * 0.5},
             {x: canvas.width * 1.1, y: canvas.height * 0.5},
           ];
           rigs.push(newRig);
@@ -878,7 +894,7 @@ setInterval(function() {
           ];
           rigs.push(newRig);
         break;
-        case 6:
+        case 7:
           rigs = [];
           for(let x = 0; x < 8; x+=1) {
             newRig = new Rig(1);
@@ -889,10 +905,10 @@ setInterval(function() {
             rigs.push(newRig);
           }
         break;
-        case 7:
+        case 8:
           rigs = [];
         break;
-        case 10:
+        case 11:
           newRig = new Rig(1.5);
           newRig.moveTo(canvas.width * 0.2, canvas.height * 0.7);
           rigs.push(newRig);
