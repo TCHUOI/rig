@@ -49,47 +49,131 @@ function getPos(x, y, r) {
     y: x * Math.sin(r) + y * Math.sin(r + Math.PI/2),
   };
 }
+/**
+var drawTrojanHorse = function(x, y, s){
+   ctx.beginPath();
+      ctx.moveTo(x-70, y+66);
+      ctx.lineTo(x-70, y+40);
+      ctx.lineTo(x-70, y+20);
+      ctx.lineTo(x-70, y);
+      ctx.lineTo(x-80, y-20);
+      ctx.lineTo(x-100, y-40);
+      ctx.lineTo(x-118, y-68);
+      ctx.lineTo(x-150, y-74);
+      ctx.lineTo(x-183, y-75);
+      ctx.lineTo(x-191, y-84);
+      ctx.lineTo(x-182, y-95);
+      ctx.lineTo(x-151, y-104);
+      ctx.lineTo(x-142, y-116);
+      ctx.lineTo(x-135, y-122);
+      ctx.lineTo(x-122, y-124);
+      ctx.lineTo(x-114, y-127);
+      ctx.lineTo(x-110, y-136);
+      ctx.lineTo(x-106, y-148);
+      ctx.lineTo(x-98, y-137);
+      ctx.lineTo(x-98, y-126);
+      ctx.lineTo(x-100, y-120);
+      ctx.lineTo(x-90, y-118);
+      ctx.lineTo(x-97, y-131);
+      ctx.lineTo(x-78, y-121);
+      ctx.lineTo(x-69, y-110);
+      ctx.lineTo(x-58, y-99);
+      ctx.lineTo(x-42, y-78);
+      ctx.lineTo(x-20, y-79);
+      ctx.lineTo(x+15, y-70);
+      ctx.lineTo(x+42, y-63);
+      ctx.lineTo(x+74, y-70);
+      ctx.lineTo(x+102, y-78);
+      ctx.lineTo(x+142, y-50);
+      ctx.lineTo(x+156, y-15);
+      ctx.lineTo(x+170, y+6);
+      ctx.lineTo(x+178, y+15);
+      ctx.lineTo(x+180, y+29);
+      ctx.lineTo(x+154, y+1);
+      ctx.lineTo(x+140, y-20);
+      ctx.lineTo(x+140, y-10);
+      ctx.lineTo(x+146, y+9);
+      ctx.lineTo(x+145, y+37);
+      ctx.lineTo(x+135, y+64);
+      ctx.lineTo(x+137, y+81);
+      ctx.lineTo(x+101, y+82);
+      ctx.lineTo(x+118, y+67);
+      ctx.lineTo(x+121, y+41);
+      ctx.lineTo(x+107, y+34);
+      ctx.lineTo(x+92, y+21);
+      ctx.lineTo(x+85, y+11);
+      ctx.lineTo(x+70, y+20);
+      ctx.lineTo(x+30, y+30);
+      ctx.lineTo(x-2, y+22);
+      ctx.lineTo(x-30, y+10);
+      ctx.lineTo(x-50, y+30);
+      ctx.lineTo(x-50, y+79);
+      ctx.lineTo(x-91, y+81);
+   ctx.fill();
+};
+*/
+var drawTrojanHorse = function(x, y, s) {
+   ctx.beginPath();
+      ctx.moveTo(x + s * -70, y + s * 66);
+      ctx.lineTo(x + s * -70, y + s * 40);
+      ctx.lineTo(x + s * -70, y + s * 20);
+      ctx.lineTo(x + s * -70, y + s * 0);
+      ctx.lineTo(x + s * -80, y + s * -20);
+      ctx.lineTo(x + s * -100, y + s * -40);
+      ctx.lineTo(x + s * -118, y + s * -68);
+      ctx.lineTo(x + s * -150, y + s * -74);
+      ctx.lineTo(x + s * -183, y + s * -75);
+      ctx.lineTo(x + s * -191, y + s * -84);
+      ctx.lineTo(x + s * -182, y + s * -95);
+      ctx.lineTo(x + s * -151, y + s * -104);
+      ctx.lineTo(x + s * -142, y + s * -116);
+      ctx.lineTo(x + s * -135, y + s * -122);
+      ctx.lineTo(x + s * -122, y + s * -124);
+      ctx.lineTo(x + s * -114, y + s * -127);
+      ctx.lineTo(x + s * -110, y + s * -136);
+      ctx.lineTo(x + s * -106, y + s * -148);
+      ctx.lineTo(x + s * -98, y + s * -137);
+      ctx.lineTo(x + s * -98, y + s * -126);
+      ctx.lineTo(x + s * -100, y + s * -120);
+      ctx.lineTo(x + s * -90, y + s * -118);
+      ctx.lineTo(x + s * -97, y + s * -131);
+      ctx.lineTo(x + s * -78, y + s * -121);
+      ctx.lineTo(x + s * -69, y + s * -110);
+      ctx.lineTo(x + s * -58, y + s * -99);
+      ctx.lineTo(x + s * -42, y + s * -78);
+      ctx.lineTo(x + s * -20, y + s * -79);
+      ctx.lineTo(x + s * 15, y + s * -70);
+      ctx.lineTo(x + s * 42, y + s * -63);
+      ctx.lineTo(x + s * 74, y + s * -70);
+      ctx.lineTo(x + s * 102, y + s * -78);
+      ctx.lineTo(x + s * 142, y + s * -50);
+      ctx.lineTo(x + s * 156, y + s * -15);
+      ctx.lineTo(x + s * 170, y + s * 6);
+      ctx.lineTo(x + s * 178, y + s * 15);
+      ctx.lineTo(x + s * 180, y + s * 29);
+      ctx.lineTo(x + s * 154, y + s * 1);
+      ctx.lineTo(x + s * 140, y + s * -20);
+      ctx.lineTo(x + s * 140, y + s * -10);
+      ctx.lineTo(x + s * 146, y + s * 9);
+      ctx.lineTo(x + s * 145, y + s * 37);
+      ctx.lineTo(x + s * 135, y + s * 64);
+      ctx.lineTo(x + s * 137, y + s * 81);
+      ctx.lineTo(x + s * 101, y + s * 82);
+      ctx.lineTo(x + s * 118, y + s * 67);
+      ctx.lineTo(x + s * 121, y + s * 41);
+      ctx.lineTo(x + s * 107, y + s * 34);
+      ctx.lineTo(x + s * 92, y + s * 21);
+      ctx.lineTo(x + s * 85, y + s * 11);
+      ctx.lineTo(x + s * 70, y + s * 20);
+      ctx.lineTo(x + s * 30, y + s * 30);
+      ctx.lineTo(x + s * -2, y + s * 22);
+      ctx.lineTo(x + s * -30, y + s * 10);
+      ctx.lineTo(x + s * -50, y + s * 30);
+      ctx.lineTo(x + s * -50, y + s * 79);
+      ctx.lineTo(x + s * -91, y + s * 81);
+   ctx.fill();
+};
 
-function drawTrojanHorse(x, y) {
-    // Draw the body of the horse with a curved shape
-    ctx.fillStyle = "saddlebrown";
-    ctx.beginPath();
-    ctx.moveTo(x, y + 50);
-    ctx.quadraticCurveTo(x + 100, y - 50, x + 200, y + 50);
-    ctx.lineTo(x + 200, y + 100);
-    ctx.lineTo(x, y + 100);
-    ctx.closePath();
-    ctx.fill();
-    
-    // Draw the neck connecting the head to the body
-    ctx.beginPath();
-    ctx.moveTo(x + 180, y + 10);
-    ctx.lineTo(x + 180, y - 20);
-    ctx.lineTo(x + 200, y - 20);
-    ctx.lineTo(x + 200, y + 10);
-    ctx.closePath();
-    ctx.fill();
-    
-    // Draw the head of the horse with a more natural shape
-    ctx.beginPath();
-    ctx.moveTo(x + 200, y - 20);
-    ctx.quadraticCurveTo(x + 230, y - 50, x + 220, y - 70);
-    ctx.quadraticCurveTo(x + 210, y - 90, x + 180, y - 70);
-    ctx.quadraticCurveTo(x + 170, y - 50, x + 180, y - 20);
-    ctx.closePath();
-    ctx.fill();
-    
-    // Draw the legs of the horse
-    ctx.fillRect(x + 20, y + 100, 20, 50);
-    ctx.fillRect(x + 160, y + 100, 20, 50);
-    
-    // Draw the wheels
-    ctx.fillStyle = "black";
-    ctx.beginPath();
-    ctx.arc(x + 30, y + 160, 15, 0, Math.PI * 2);
-    ctx.arc(x + 170, y + 160, 15, 0, Math.PI * 2);
-    ctx.fill();
-}
 
 
 function Limb(x, y, length1, length2, reverse) {
@@ -562,12 +646,6 @@ function camp() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "rgb(11, 82, 0)";
   ctx.fillRect(0, canvas.height/2, canvas.width, 500);
-  ctx.fillStyle = "rgb(87, 48, 0)";
-  ctx.fillRect(0, canvas.height - 150, canvas.width, 150);
-  ctx.fillStyle = "rgb(100, 100, 100)";
-  ctx.fillRect(canvas.width * 0.40, canvas.height * 0.82, canvas.width * 0.2, canvas.height * 0.15);
-  ctx.fillStyle = "rgb(70, 70, 70)";
-  ctx.fillRect(canvas.width * 0.40, canvas.height * 0.8, canvas.width * 0.2, canvas.height * 0.1);
 }
 function blacksmith() {
   ctx.fillStyle = "rgb(150, 150, 150)"
@@ -612,7 +690,7 @@ function caption(txt, s, e) {
   }
 }
 
-let timings = [700, 600, 400, 600, 800, 700, 700, 500, 400, 100, 400];
+let timings = [700, 600, 400, 600, 800, 700, 700, 500, 400, 100, 1600, 200];
 let scene = 0;
 let newRig;
 
@@ -657,10 +735,18 @@ setInterval(function() {
       break;
       case 4:
         	camp();
-        	for(let i = 1; i < rigs.length; i++) {
+        	for(let i = 3; i < rigs.length; i++) {
         	  rigs[i].cheer();
         	}
-        	rigs[0].palladium();
+        	ctx.fillStyle = "rgb(87, 48, 0)";
+          ctx.fillRect(0, canvas.height - 150, canvas.width, 150);
+          ctx.fillStyle = "rgb(100, 100, 100)";
+          ctx.fillRect(canvas.width * 0.40, canvas.height * 0.82, canvas.width * 0.2, canvas.height * 0.15);
+          ctx.fillStyle = "rgb(70, 70, 70)";
+          ctx.fillRect(canvas.width * 0.40, canvas.height * 0.8, canvas.width * 0.2, canvas.height * 0.1);
+          rigs[0].palladium();
+        	rigs[1].cheer();
+        	rigs[2].cheer();
         	caption("They brought the Palladium to camp, ", 0, 400)
         	caption("where they used it to encourage the men", 400, 800)
       break;
@@ -683,12 +769,12 @@ setInterval(function() {
         	caption("their boats and sailed away.", 400, 700)
       break;
       case 7:
-        	docks(-canvas.width * 1 * (timing/timings[6]));
+        	docks(-canvas.width * 1 * (timing/timings[7]));
         	caption("They sailed behind the island", 0, 400)
         	caption("of Tenedos to hide from the Trojans.", 400, 700)
       break;
       case 8:
-        	docks(-canvas.width - canvas.width * 2.2 * (timing/timings[7]));
+        	docks(-canvas.width - canvas.width * 2.2 * (timing/timings[8]));
       break;
       case 9:
         	docks(-canvas.width * 3.2);
@@ -706,7 +792,17 @@ setInterval(function() {
             ctx.fillRect(x, canvas.height/4 - canvas.height * 0.02, canvas.width * 0.05, canvas.height * 0.02);
           }
           rigs[0].cheer();
-          drawTrojanHorse(canvas.width * 0.3, canvas.height * 0.7)
+          ctx.fillStyle = "rgb(156, 91, 12)"
+          drawTrojanHorse(canvas.width * 0.8, canvas.height * 0.8, 2)
+          caption("and for the last part of his plan", 0, 400)
+        	caption("A single Greek man, named Sinon", 400, 800)
+        	caption("was tasked with convincing the Trojans", 800, 1200)
+        	caption("to take the wooden horse back into their city.", 1200, 1600)
+      break;
+      case 11:
+        	ctx.fillStyle = "rgb(0, 0, 0)"
+        	ctx.fillRect(0, 0, canvas.width, canvas.height)
+        	caption("to be continued...", 0, 200)
       break;
     }
     if(timing >= timings[scene]) {
@@ -716,17 +812,17 @@ setInterval(function() {
         case 3:
           rigs = [];
           newRig = new Rig(1);
-          newRig.move(-canvas.width/2 - 350, 100);
+          newRig.moveTo(-350, canvas.height * 0.55);
           newRig.steps = [
-            {x: canvas.width * 0.75, y: canvas.height * 0.6},
+            {x: canvas.width * 0.75, y: canvas.height * 0.55},
             {x: canvas.width * 1.1, y: canvas.height * 0.5},
           ];
           rigs.push(newRig);
           
           newRig = new Rig(1);
-          newRig.move(-canvas.width/2 - 450, 100);
+          newRig.moveTo(-450, canvas.height * 0.55);
           newRig.steps = [
-            {x: canvas.width * 0.75, y: canvas.height * 0.6},
+            {x: canvas.width * 0.75, y: canvas.height * 0.55},
             {x: canvas.width * 1.1, y: canvas.height * 0.5},
           ];
           rigs.push(newRig);
@@ -747,13 +843,16 @@ setInterval(function() {
           
           for(let x = 0; x < canvas.width; x+=60) {
             newRig = new Rig(0.5);
-            newRig.moveTo(x, canvas.height * 0.53);
+            newRig.moveTo(x, canvas.height * 0.50);
+            newRig.walkCycle = x;
             rigs.push(newRig);
             newRig = new Rig(0.7);
-            newRig.moveTo(x + 20, canvas.height * 0.55);
+            newRig.moveTo(x + 20, canvas.height * 0.53);
+            newRig.walkCycle = x + 50;
             rigs.push(newRig);
             newRig = new Rig(0.9);
-            newRig.moveTo(x - 30, canvas.height * 0.57);
+            newRig.moveTo(x - 30, canvas.height * 0.6);
+            newRig.walkCycle = x + 100;
             rigs.push(newRig);
           }
         break;
@@ -805,6 +904,11 @@ setInterval(function() {
         break;
       }
     }
+    /*
+    if(scene <= 10) {
+      timing+=90;
+    }
+    */
     timing+=1;
 }, 10);
 
