@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palladuyn and a plan</title>
+    <title>Palladium and a Plan</title>
     <style>
         body {
         	margin: 0;
@@ -297,6 +297,7 @@ Rig.prototype.stand = function(s) {
 };
 Rig.prototype.palladium = function() {
   ctx.strokeStyle = "rgb(100, 100, 100)"
+  ctx.lineWidth = 5;
   this.arm1.draw();
   this.arm2.draw();
   this.leg1.draw();
@@ -312,7 +313,7 @@ Rig.prototype.palladium = function() {
   ctx.arc(this.x + 5 * this.scaleFactor, this.y - 40 + 30 * this.scaleFactor, 50 * this.scaleFactor, -Math.PI/3 - 0.1, Math.PI/3 - 0.1);
   ctx.stroke();
 
-
+  ctx.lineWidth = 5;
   this.leg1.update(this.x + 10 * this.scaleFactor, 
       this.y - 40 + 160 * this.scaleFactor);
   this.leg2.update(this.x - 15 * this.scaleFactor, 
@@ -337,6 +338,7 @@ Rig.prototype.palladium = function() {
   this.arm2.x = this.x + 5 * increase(this.face);
 }
 Rig.prototype.cheer = function() {
+  ctx.lineWidth = 5;
   ctx.strokeStyle = "rgb(" + (100 - this.scaleFactor * 100) + ", " + (100 - this.scaleFactor * 100) + ", " + (100 - this.scaleFactor * 100) + ")"
   this.arm1.draw();
   this.arm2.draw();
@@ -365,6 +367,7 @@ Rig.prototype.cheer = function() {
 }
 Rig.prototype.update = function() {
     ctx.strokeStyle = "rgb(0, 0, 0)"
+    ctx.lineWidth = 5;
     this.arm1.draw();
     this.arm2.draw();
     this.leg1.draw();
@@ -408,11 +411,12 @@ Rig.prototype.AI = function() {
   if(!this.steps || this.step >= this.steps.length) {
     return;
   }
+  let cycle = 0.07;
   let moved = false;
   if(this.x < this.steps[this.step].x - 2) {
     moved = true;
     this.move(2, 0)
-    this.walkCycle+=0.1;
+    this.walkCycle+=cycle;
     this.face = 1;
     this.arm1.reverse = true;
     this.arm2.reverse = true;
@@ -421,7 +425,7 @@ Rig.prototype.AI = function() {
   } else if(this.x > this.steps[this.step].x + 2) {
     moved = true;
     this.move(-2, 0)
-    this.walkCycle-=0.1;
+    this.walkCycle-=cycle;
     this.face = -1;
     this.arm1.reverse = false;
     this.arm2.reverse = false;
@@ -432,13 +436,13 @@ Rig.prototype.AI = function() {
   
   if(this.y < this.steps[this.step].y - 2) {
     if(moved) {
-      this.walkCycle+=0.1;
+      this.walkCycle+=cycle;
     }
     moved = true;
     this.move(0, 2)
   } else if(this.y > this.steps[this.step].y + 2) {
     if(moved) {
-      this.walkCycle-=0.1;
+      this.walkCycle-=cycle;
     }
     moved = true;
     this.move(0, -2)
@@ -599,6 +603,29 @@ function troy(offset, day) {
   for(let x = 0; x < canvas.width * 1.5; x+=canvas.width * 0.1) {
     ctx.fillRect(x + offset, canvas.height/4 - canvas.height * 0.02, canvas.width * 0.05, canvas.height * 0.02);
   }
+  ctx.fillStyle = "rgb(" + (93 - day * 92) + ", " + (226 - day * 179) + ", " + (231 - day * 157) + ")"
+  ctx.beginPath();
+  ctx.ellipse(canvas.width * 0.2 + offset, canvas.height * 0.45, 30, 30, 0, Math.PI, 0)
+  ctx.fill();
+  ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.45, 60, 25);
+  ctx.fillStyle = "rgb(100, 100, 100)"
+  ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.41, 60, 3)
+  ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.43, 60, 3)
+  ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.45, 60, 3)
+  ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.47, 60, 3)
+  ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.49, 60, 3)
+  
+  ctx.fillRect(canvas.width * 0.2 - 20 + offset, canvas.height * 0.39, 3, 55)
+  ctx.fillRect(canvas.width * 0.2 - 10 + offset, canvas.height * 0.38, 3, 60)
+  ctx.fillRect(canvas.width * 0.2 + offset, canvas.height * 0.37, 3, 65)
+  ctx.fillRect(canvas.width * 0.2 + 10 + offset, canvas.height * 0.38, 3, 60)
+  ctx.fillRect(canvas.width * 0.2 + 20 + offset, canvas.height * 0.39, 3, 55)
+  
+  ctx.strokeStyle = "rgb(200, 200, 200)"
+  ctx.lineWidth = 10;
+  ctx.beginPath();
+  ctx.ellipse(canvas.width * 0.2 + offset, canvas.height * 0.45, 35, 35, 0, Math.PI, 0)
+  ctx.stroke();
   
   // trees
   ctx.fillStyle = "rgb(181, 113, 4)"
@@ -690,7 +717,7 @@ function caption(txt, s, e) {
   }
 }
 
-let timings = [300, 700, 600, 400, 600, 800, 700, 700, 500, 400, 100, 1600, 200];
+let timings = [300, 700, 600, 400, 600, 800, 700, 600, 700, 500, 400, 200, 1600, 200];
 let scene = 0;
 let newRig;
 let start = false;
@@ -778,23 +805,34 @@ setInterval(function() {
         	  rigs[i].update();
         	  rigs[i].AI();
         	}
-        	caption("The rest of the Greek army boarded", 0, 400)
-        	caption("their boats and sailed away.", 400, 700)
+        	ctx.fillStyle = "rgb(156, 91, 12)"
+        	drawTrojanHorse(canvas.width * 0, canvas.height * 0.5, 2)
+        	caption("Odysseus and serveral chieftans", 0, 400)
+        	caption("boarded the wooden horse", 400, 700)
       break;
       case 8:
-        	docks(-canvas.width * 1 * (timing/timings[8]));
-        	caption("They sailed...", 0, 700)
+        	docks(0);
+        	for(let i = 0; i < rigs.length; i++) {
+        	  rigs[i].update();
+        	  rigs[i].AI();
+        	}
+        	caption("While the rest of the Greek army boarded", 0, 400)
+        	caption("their boats and sailed away.", 400, 700)
       break;
       case 9:
-        	docks(-canvas.width - canvas.width * 2.2 * (timing/timings[9]));
+        	docks(-canvas.width * 1 * (timing/timings[scene]));
+        	caption("They sailed...", 0, 700)
+      break;
+      case 10:
+        	docks(-canvas.width - canvas.width * 2.2 * (timing/timings[scene]));
         	caption("behind the island", 0, 400)
         	caption("of Tenedos to hide from the Trojans.", 400, 700)
       break;
-      case 10:
-        	docks(-canvas.width * 3.2);
-        	caption("of Tenedos to hide from the Trojans.", 0, 100)
-      break;
       case 11:
+        	docks(-canvas.width * 3.2);
+        	caption("of Tenedos to hide from the Trojans.", 0, 200)
+      break;
+      case 12:
         	outTroy();
         	for(let i = 1; i < rigs.length; i++) {
         	  rigs[i].stand();
@@ -806,6 +844,31 @@ setInterval(function() {
           for(let x = 0; x < canvas.width * 1.5; x+=canvas.width * 0.1) {
             ctx.fillRect(x, canvas.height/4 - canvas.height * 0.02, canvas.width * 0.05, canvas.height * 0.02);
           }
+          let offset = 0;
+          ctx.fillStyle = "rgb(" + (93 - 0 * 92) + ", " + (226 - 0 * 179) + ", " + (231 - 0 * 157) + ")"
+          ctx.beginPath();
+          ctx.ellipse(canvas.width * 0.2 + offset, canvas.height * 0.45, 30, 30, 0, Math.PI, 0)
+          ctx.fill();
+          ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.45, 60, 25);
+          ctx.fillStyle = "rgb(100, 100, 100)"
+          ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.41, 60, 3)
+          ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.43, 60, 3)
+          ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.45, 60, 3)
+          ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.47, 60, 3)
+          ctx.fillRect(canvas.width * 0.2 - 30 + offset, canvas.height * 0.49, 60, 3)
+          
+          ctx.fillRect(canvas.width * 0.2 - 20 + offset, canvas.height * 0.39, 3, 55)
+          ctx.fillRect(canvas.width * 0.2 - 10 + offset, canvas.height * 0.38, 3, 60)
+          ctx.fillRect(canvas.width * 0.2 + offset, canvas.height * 0.37, 3, 65)
+          ctx.fillRect(canvas.width * 0.2 + 10 + offset, canvas.height * 0.38, 3, 60)
+          ctx.fillRect(canvas.width * 0.2 + 20 + offset, canvas.height * 0.39, 3, 55)
+          
+          ctx.strokeStyle = "rgb(200, 200, 200)"
+          ctx.lineWidth = 10;
+          ctx.beginPath();
+          ctx.ellipse(canvas.width * 0.2 + offset, canvas.height * 0.45, 35, 35, 0, Math.PI, 0)
+          ctx.stroke();
+          
           rigs[0].cheer();
           ctx.fillStyle = "rgb(156, 91, 12)"
           drawTrojanHorse(canvas.width * 0.8, canvas.height * 0.8, 2)
@@ -814,7 +877,7 @@ setInterval(function() {
         	caption("was tasked with convincing the Trojans", 800, 1200)
         	caption("to take the wooden horse back into their city.", 1200, 1600)
       break;
-      case 12:
+      case 13:
         	ctx.fillStyle = "rgb(0, 0, 0)"
         	ctx.fillRect(0, 0, canvas.width, canvas.height)
         	caption("to be continued...", 0, 200)
@@ -898,6 +961,17 @@ setInterval(function() {
           rigs = [];
           for(let x = 0; x < 8; x+=1) {
             newRig = new Rig(1);
+            newRig.moveTo(canvas.width + 40 + x * 75, canvas.height * 0.55);
+            newRig.steps = [
+              {x: canvas.width/2 + 40 + x * 75, y: canvas.height * 0.6},
+            ];
+            rigs.push(newRig);
+          }
+        break;
+        case 8:
+          rigs = [];
+          for(let x = 0; x < 8; x+=1) {
+            newRig = new Rig(1);
             newRig.moveTo(-40 - x * 75, canvas.height * 0.55);
             newRig.steps = [
               {x: canvas.width * 1.5, y: canvas.height * 0.6},
@@ -905,10 +979,10 @@ setInterval(function() {
             rigs.push(newRig);
           }
         break;
-        case 8:
+        case 9:
           rigs = [];
         break;
-        case 11:
+        case 12:
           newRig = new Rig(1.5);
           newRig.moveTo(canvas.width * 0.2, canvas.height * 0.7);
           rigs.push(newRig);
@@ -920,11 +994,12 @@ setInterval(function() {
         break;
       }
     }
-    /*
-    if(scene <= 10) {
+/**
+    if(scene < 7) {
       timing+=90;
     }
     */
+
     timing+=1;
 }, 10);
 
